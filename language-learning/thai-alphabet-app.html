@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Thai Script - Beginner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .mode-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .flashcard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .flashcard:hover {
+            transform: scale(1.02);
+        }
+
+        .thai-letter {
+            font-size: 8em;
+            color: white;
+            margin-bottom: 20px;
+            font-family: 'Noto Sans Thai', 'Leelawadee UI', 'Cordia New', sans-serif;
+            line-height: 1;
+        }
+
+        .romanization {
+            font-size: 2em;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .class-info {
+            font-size: 1.1em;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 5px;
+        }
+
+        .example-word {
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Noto Sans Thai', 'Leelawadee UI', 'Cordia New', sans-serif;
+        }
+
+        .tap-hint {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Learn Thai Script</h1>
+        <p class="subtitle">Master the Thai alphabet one letter at a time</p>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="consonants">Consonants</button>
+            <button class="mode-btn" data-mode="vowels">Vowels</button>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Progress</div>
+                <div class="stat-value" id="progress">0/44</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Current</div>
+                <div class="stat-value" id="currentNum">1</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Studied</div>
+                <div class="stat-value" id="studied">0</div>
+            </div>
+        </div>
+
+        <div class="flashcard" id="flashcard">
+            <div class="thai-letter" id="thaiLetter">ก</div>
+            <div class="romanization hidden" id="romanization">k (gor)</div>
+            <div class="class-info hidden" id="classInfo">Mid consonant</div>
+            <div class="example-word hidden" id="exampleWord">ไก่ (gài) - chicken</div>
+            <div class="tap-hint">Tap to reveal</div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-secondary" id="prevBtn">← Previous</button>
+            <button class="btn btn-primary" id="nextBtn">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        const thaiConsonants = [
+            { letter: 'ก', romanization: 'k (gor)', class: 'Mid consonant', example: 'ไก่ (gài) - chicken' },
+            { letter: 'ข', romanization: 'kh (khor)', class: 'High consonant', example: 'ไข่ (khài) - egg' },
+            { letter: 'ฃ', romanization: 'kh (khor)', class: 'High consonant (obsolete)', example: 'ฃวด (khùat) - bottle' },
+            { letter: 'ค', romanization: 'kh (khor)', class: 'Low consonant', example: 'ควาย (khwaai) - buffalo' },
+            { letter: 'ฅ', romanization: 'kh (khor)', class: 'Low consonant (obsolete)', example: 'ฅน (khon) - person' },
+            { letter: 'ฆ', romanization: 'kh (khor)', class: 'Low consonant', example: 'ฆ้อง (khɔ̂ɔng) - gong' },
+            { letter: 'ง', romanization: 'ng (ngor)', class: 'Low consonant', example: 'งู (nguu) - snake' },
+            { letter: 'จ', romanization: 'j (jor)', class: 'Mid consonant', example: 'จาน (jaan) - plate' },
+            { letter: 'ฉ', romanization: 'ch (chor)', class: 'High consonant', example: 'ฉลาม (chalǎam) - shark' },
+            { letter: 'ช', romanization: 'ch (chor)', class: 'Low consonant', example: 'ช้าง (cháang) - elephant' },
+            { letter: 'ซ', romanization: 's (sor)', class: 'Low consonant', example: 'โซ่ (sôo) - chain' },
+            { letter: 'ฌ', romanization: 'ch (chor)', class: 'Low consonant', example: 'เฌอ (chə̂ə) - tree' },
+            { letter: 'ญ', romanization: 'y (yor)', class: 'Low consonant', example: 'หญิง (yǐng) - woman' },
+            { letter: 'ฎ', romanization: 'd (dor)', class: 'Mid consonant', example: 'ชฎา (chadaa) - headdress' },
+            { letter: 'ฏ', romanization: 't (tor)', class: 'Mid consonant', example: 'ปฏัก (bpàdtàk) - stake' },
+            { letter: 'ฐ', romanization: 'th (thor)', class: 'High consonant', example: 'ฐาน (thǎan) - base' },
+            { letter: 'ฑ', romanization: 'th (thor)', class: 'Low consonant', example: 'มณโฑ (monthoo) - Montho' },
+            { letter: 'ฒ', romanization: 'th (thor)', class: 'Low consonant', example: 'ผู้เฒ่า (phûu-thàao) - old person' },
+            { letter: 'ณ', romanization: 'n (nor)', class: 'Low consonant', example: 'เณร (neen) - novice monk' },
+            { letter: 'ด', romanization: 'd (dor)', class: 'Mid consonant', example: 'เด็ก (dèk) - child' },
+            { letter: 'ต', romanization: 't (tor)', class: 'Mid consonant', example: 'เต่า (dtào) - turtle' },
+            { letter: 'ถ', romanization: 'th (thor)', class: 'High consonant', example: 'ถุง (thǔng) - bag' },
+            { letter: 'ท', romanization: 'th (thor)', class: 'Low consonant', example: 'ทหาร (tháhǎan) - soldier' },
+            { letter: 'ธ', romanization: 'th (thor)', class: 'Low consonant', example: 'ธง (thong) - flag' },
+            { letter: 'น', romanization: 'n (nor)', class: 'Low consonant', example: 'หนู (nǔu) - mouse' },
+            { letter: 'บ', romanization: 'b (bor)', class: 'Mid consonant', example: 'ใบไม้ (bai-máai) - leaf' },
+            { letter: 'ป', romanization: 'p (bpor)', class: 'Mid consonant', example: 'ปลา (bplaa) - fish' },
+            { letter: 'ผ', romanization: 'ph (phor)', class: 'High consonant', example: 'ผึ้ง (phʉ̂ng) - bee' },
+            { letter: 'ฝ', romanization: 'f (for)', class: 'High consonant', example: 'ฝา (fǎa) - lid' },
+            { letter: 'พ', romanization: 'ph (phor)', class: 'Low consonant', example: 'พาน (phaan) - tray' },
+            { letter: 'ฟ', romanization: 'f (for)', class: 'Low consonant', example: 'ฟัน (fan) - teeth' },
+            { letter: 'ภ', romanization: 'ph (phor)', class: 'Low consonant', example: 'สำเภา (sǎm-phao) - junk' },
+            { letter: 'ม', romanization: 'm (mor)', class: 'Low consonant', example: 'ม้า (máa) - horse' },
+            { letter: 'ย', romanization: 'y (yor)', class: 'Low consonant', example: 'ยักษ์ (yâk) - giant' },
+            { letter: 'ร', romanization: 'r (ror)', class: 'Low consonant', example: 'เรือ (rʉa) - boat' },
+            { letter: 'ล', romanization: 'l (lor)', class: 'Low consonant', example: 'ลิง (ling) - monkey' },
+            { letter: 'ว', romanization: 'w (wor)', class: 'Low consonant', example: 'แหวน (wɛ̌ɛn) - ring' },
+            { letter: 'ศ', romanization: 's (sor)', class: 'High consonant', example: 'ศาลา (sǎalaa) - pavilion' },
+            { letter: 'ษ', romanization: 's (sor)', class: 'High consonant', example: 'ฤๅษี (rʉʉ-sǐi) - hermit' },
+            { letter: 'ส', romanization: 's (sor)', class: 'High consonant', example: 'เสือ (sʉ̌a) - tiger' },
+            { letter: 'ห', romanization: 'h (hor)', class: 'High consonant', example: 'หีบ (hìip) - chest/box' },
+            { letter: 'ฬ', romanization: 'l (lor)', class: 'Low consonant', example: 'จุฬา (julaa) - kite' },
+            { letter: 'อ', romanization: 'ɔ (or)', class: 'Mid consonant', example: 'อ่าง (àang) - basin' },
+            { letter: 'ฮ', romanization: 'h (hor)', class: 'Low consonant', example: 'นกฮูก (nók-hûuk) - owl' }
+        ];
+
+        const thaiVowels = [
+            { letter: 'อะ', romanization: 'a (short)', class: 'Short vowel', example: 'กะ (ga)' },
+            { letter: 'อา', romanization: 'aa (long)', class: 'Long vowel', example: 'กา (gaa) - crow' },
+            { letter: 'อิ', romanization: 'i (short)', class: 'Short vowel', example: 'กิน (gin) - eat' },
+            { letter: 'อี', romanization: 'ii (long)', class: 'Long vowel', example: 'ดี (dii) - good' },
+            { letter: 'อึ', romanization: 'ʉ (short)', class: 'Short vowel', example: 'อึก (ʉk)' },
+            { letter: 'อื', romanization: 'ʉʉ (long)', class: 'Long vowel', example: 'อืด (ʉ̀ʉt) - stuffy' },
+            { letter: 'อุ', romanization: 'u (short)', class: 'Short vowel', example: 'อุด (ùt) - plug' },
+            { letter: 'อู', romanization: 'uu (long)', class: 'Long vowel', example: 'อูฐ (ùut) - camel' },
+            { letter: 'เอะ', romanization: 'e (short)', class: 'Short vowel', example: 'เกะ (gè)' },
+            { letter: 'เอ', romanization: 'ee (long)', class: 'Long vowel', example: 'เล (lee) - at all' },
+            { letter: 'แอะ', romanization: 'ɛ (short)', class: 'Short vowel', example: 'แกะ (gɛ̀) - sheep' },
+            { letter: 'แอ', romanization: 'ɛɛ (long)', class: 'Long vowel', example: 'แก (gɛɛ) - old' },
+            { letter: 'โอะ', romanization: 'o (short)', class: 'Short vowel', example: 'โกะ (go)' },
+            { letter: 'โอ', romanization: 'oo (long)', class: 'Long vowel', example: 'โต (dtoo) - grow' },
+            { letter: 'เอาะ', romanization: 'ɔ (short)', class: 'Short vowel', example: 'เกาะ (gɔ̀) - island' },
+            { letter: 'ออ', romanization: 'ɔɔ (long)', class: 'Long vowel', example: 'ออก (ɔ̀ɔk) - exit' },
+            { letter: 'เออะ', romanization: 'ə (short)', class: 'Short vowel', example: 'เกอะ (gə̀)' },
+            { letter: 'เออ', romanization: 'əə (long)', class: 'Long vowel', example: 'เกอ (gəə)' },
+            { letter: 'เอีย', romanization: 'ia', class: 'Diphthong', example: 'เกีย (giia)' },
+            { letter: 'เอือ', romanization: 'ʉa', class: 'Diphthong', example: 'เกือ (gʉa)' },
+            { letter: 'อัว', romanization: 'ua', class: 'Diphthong', example: 'กัว (gua)' },
+            { letter: 'ไอ', romanization: 'ai', class: 'Diphthong', example: 'ไก่ (gài) - chicken' },
+            { letter: 'ใอ', romanization: 'ai', class: 'Diphthong', example: 'ใกล้ (glâi) - near' },
+            { letter: 'เอา', romanization: 'ao', class: 'Diphthong', example: 'เกา (gao) - nine' },
+            { letter: 'อำ', romanization: 'am', class: 'Special vowel', example: 'กำ (gam)' },
+            { letter: 'ฤ', romanization: 'rʉ', class: 'Special vowel', example: 'ฤดู (rʉ́-duu) - season' },
+            { letter: 'ฤๅ', romanization: 'rʉʉ', class: 'Special vowel (rare)', example: 'ฤๅษี (rʉʉ-sǐi) - hermit' }
+        ];
+
+        let currentMode = 'consonants';
+        let currentIndex = 0;
+        let isRevealed = false;
+        let studiedSet = new Set();
+
+        const flashcard = document.getElementById('flashcard');
+        const thaiLetterEl = document.getElementById('thaiLetter');
+        const romanizationEl = document.getElementById('romanization');
+        const classInfoEl = document.getElementById('classInfo');
+        const exampleWordEl = document.getElementById('exampleWord');
+        const progressEl = document.getElementById('progress');
+        const currentNumEl = document.getElementById('currentNum');
+        const studiedEl = document.getElementById('studied');
+        const progressFillEl = document.getElementById('progressFill');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const modeBtns = document.querySelectorAll('.mode-btn');
+
+        function getCurrentData() {
+            return currentMode === 'consonants' ? thaiConsonants : thaiVowels;
+        }
+
+        function updateCard() {
+            const data = getCurrentData();
+            const item = data[currentIndex];
+
+            thaiLetterEl.textContent = item.letter;
+            romanizationEl.textContent = item.romanization;
+            classInfoEl.textContent = item.class;
+            exampleWordEl.textContent = item.example;
+
+            isRevealed = false;
+            romanizationEl.classList.add('hidden');
+            classInfoEl.classList.add('hidden');
+            exampleWordEl.classList.add('hidden');
+
+            updateStats();
+        }
+
+        function updateStats() {
+            const data = getCurrentData();
+            progressEl.textContent = `${currentIndex + 1}/${data.length}`;
+            currentNumEl.textContent = currentIndex + 1;
+            studiedEl.textContent = studiedSet.size;
+
+            const progressPercent = ((currentIndex + 1) / data.length) * 100;
+            progressFillEl.style.width = progressPercent + '%';
+
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === data.length - 1;
+        }
+
+        flashcard.addEventListener('click', () => {
+            if (!isRevealed) {
+                romanizationEl.classList.remove('hidden');
+                classInfoEl.classList.remove('hidden');
+                exampleWordEl.classList.remove('hidden');
+                isRevealed = true;
+                studiedSet.add(`${currentMode}-${currentIndex}`);
+                updateStats();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const data = getCurrentData();
+            if (currentIndex < data.length - 1) {
+                currentIndex++;
+                updateCard();
+            }
+        });
+
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+                currentIndex = 0;
+                updateCard();
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                prevBtn.click();
+            } else if (e.key === 'ArrowRight') {
+                nextBtn.click();
+            } else if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                flashcard.click();
+            }
+        });
+
+        // Initialize
+        updateCard();
+    </script>
+</body>
+</html>
